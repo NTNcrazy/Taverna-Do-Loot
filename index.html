@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Taverna do Loot — bot para organização de comunidades e guildas de Albion Online no Discord.">
+  <title>Taverna do Loot | Bot para Albion Online no Discord</title>
+  <style>
+    :root{
+      --bg:#081018;
+      --bg2:#0d1620;
+      --card:#111b26;
+      --card2:#0c141d;
+      --text:#f5f7fa;
+      --muted:#aeb8c4;
+      --gold:#d9a429;
+      --gold2:#f0c15a;
+      --line:rgba(217,164,41,.28);
+      --discord:#5865f2;
+      --green:#19a463;
+      --shadow:0 20px 60px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(217,164,41,.08), transparent 28%),
+        radial-gradient(circle at top left, rgba(88,101,242,.08), transparent 30%),
+        linear-gradient(180deg,var(--bg),#050a0f 65%,#03070a);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    .container{width:min(1180px,92%);margin:auto}
+    .nav{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(18px);
+      background:rgba(5,10,15,.82);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:20px;padding:16px 0;
+    }
+    .brand{font-weight:800;font-size:1.08rem;letter-spacing:.2px}
+    .brand span{color:var(--gold2)}
+    .nav-links{display:flex;gap:18px;flex-wrap:wrap}
+    .nav-links a{color:#d6dde5;font-size:.94rem}
+    .hero{
+      min-height:72vh;display:grid;place-items:center;text-align:center;
+      padding:88px 0 60px;
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 14px;border:1px solid var(--line);
+      border-radius:999px;color:var(--gold2);font-size:.82rem;font-weight:800;
+      background:rgba(217,164,41,.05);
+    }
+    h1{
+      font-size:clamp(2.7rem,7vw,5.6rem);
+      line-height:1.02;margin:22px 0 18px;letter-spacing:-2px;
+    }
+    h1 span{
+      background:linear-gradient(90deg,var(--gold2),#fff2bc);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .hero p{
+      max-width:780px;margin:0 auto;color:var(--muted);
+      font-size:clamp(1rem,2vw,1.2rem)
+    }
+    .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-height:48px;padding:0 20px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.1);
+      background:#121b24;font-weight:800;transition:.2s;
+    }
+    .btn:hover{transform:translateY(-2px);border-color:var(--gold)}
+    .btn.discord{background:var(--discord);border-color:var(--discord)}
+    .btn.primary{background:linear-gradient(135deg,#a87310,var(--gold));color:#111}
+    .quick{
+      margin-top:32px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap;
+      color:#cbd3dc;font-size:.92rem
+    }
+    .quick b{color:white}
+    .section{padding:78px 0}
+    .section-head{text-align:center;max-width:800px;margin:0 auto 34px}
+    .eyebrow{color:var(--gold2);font-weight:900;letter-spacing:1.8px;font-size:.78rem}
+    h2{font-size:clamp(2rem,5vw,3.5rem);margin:8px 0 12px;line-height:1.1}
+    .section-head p{color:var(--muted);margin:0}
+    .feature-list{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+      margin-top:34px
+    }
+    .feature-card{
+      background:linear-gradient(180deg,rgba(17,27,38,.95),rgba(10,17,24,.95));
+      border:1px solid rgba(255,255,255,.07);border-radius:18px;
+      padding:22px;box-shadow:var(--shadow)
+    }
+    .feature-card b{display:block;margin-bottom:7px;color:#fff;font-size:1.05rem}
+    .feature-card p{margin:0;color:var(--muted);font-size:.95rem}
+    .showcase{
+      display:grid;grid-template-columns:1fr;gap:28px;
+    }
+    .shot{
+      background:linear-gradient(180deg,rgba(16,24,34,.92),rgba(8,13,19,.92));
+      border:1px solid var(--line);border-radius:22px;padding:12px;
+      box-shadow:var(--shadow);overflow:hidden
+    }
+    .shot img{border-radius:14px;width:100%;height:auto}
+    .premium-box{
+      display:grid;grid-template-columns:1.25fr .75fr;gap:22px;
+      background:linear-gradient(135deg,rgba(217,164,41,.11),rgba(14,22,31,.96));
+      border:1px solid rgba(217,164,41,.38);border-radius:24px;padding:28px;
+      box-shadow:var(--shadow)
+    }
+    .premium-box ul{padding-left:0;list-style:none;columns:2;gap:30px}
+    .premium-box li{margin:8px 0;color:#e4e9ee}
+    .price{
+      display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+      border:1px solid rgba(217,164,41,.3);border-radius:18px;padding:24px;background:rgba(0,0,0,.16)
+    }
+    .price small{color:var(--muted)}
+    .price strong{font-size:3rem;color:var(--gold2);line-height:1}
+    .cta{
+      text-align:center;padding:70px 0 88px;
+    }
+    .support{
+      display:grid;grid-template-columns:1fr 1fr;gap:24px
+    }
+    .support-card{
+      background:var(--card2);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:24px
+    }
+    .support-card p{color:var(--muted)}
+    footer{
+      border-top:1px solid rgba(255,255,255,.06);
+      color:#aeb8c4;padding:24px 0 38px;text-align:center;font-size:.9rem
+    }
+    @media (max-width:900px){
+      .feature-list{grid-template-columns:1fr 1fr}
+      .premium-box,.support{grid-template-columns:1fr}
+      .premium-box ul{columns:1}
+      .nav-links{display:none}
+    }
+    @media (max-width:620px){
+      .feature-list{grid-template-columns:1fr}
+      .hero{min-height:auto}
+      h1{letter-spacing:-1px}
+    }
+  </style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand">⚔️ <span>Taverna do Loot</span></div>
+    <nav class="nav-links">
+      <a href="#recursos">Recursos</a>
+      <a href="#demonstracao">Demonstração</a>
+      <a href="#premium">Premium</a>
+      <a href="#suporte">Suporte</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="badge">BOT PARA DISCORD • ALBION ONLINE</div>
+      <h1>Sua guilda organizada.<br><span>Seu loot sob controle.</span></h1>
+      <p>
+        Eventos, templates, presença, Loot Split, progressão, rankings, tesouraria,
+        builds, mercado, Regear e administração em um único bot feito para guildas de Albion Online.
+      </p>
+      <div class="actions">
+        <a class="btn discord" href="https://discord.com/oauth2/authorize?client_id=1537604539983732766" target="_blank" rel="noopener noreferrer">🤖 Adicionar ao Discord</a>
+        <a class="btn primary" href="#premium">Conhecer o Premium</a>
+        <a class="btn" href="#demonstracao">Ver demonstração</a>
+      </div>
+      <div class="quick">
+        <span>⚔️ <b>Eventos</b></span>
+        <span>💰 <b>Loot Split</b></span>
+        <span>📈 <b>Mercado</b></span>
+        <span>🛡️ <b>Builds</b></span>
+        <span>📦 <b>Regear</b></span>
+        <span>🏦 <b>Tesouraria</b></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="recursos" class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">RECURSOS</div>
+        <h2>Tudo que sua guilda precisa em um só lugar</h2>
+        <p>Menos planilhas, menos confusão e mais tempo para jogar.</p>
+      </div>
+      <div class="feature-list">
+        <article class="feature-card"><b>⚔️ Eventos e Templates</b><p>Crie eventos, funções, vagas, banners e reutilize composições salvas.</p></article>
+        <article class="feature-card"><b>💰 Loot Split</b><p>Divisão automática de prata, taxas, resto e XP para os participantes.</p></article>
+        <article class="feature-card"><b>👤 Perfil e Progressão</b><p>Níveis, XP, presenças, eventos concluídos, saldo e funções mais usadas.</p></article>
+        <article class="feature-card"><b>🏆 Rankings</b><p>Ranking de prata e progressão para aumentar o engajamento da guilda.</p></article>
+        <article class="feature-card"><b>🏦 Tesouraria</b><p>Controle de saldo, taxas, receitas, despesas e movimentações da guilda.</p></article>
+        <article class="feature-card"><b>🛡️ Builds e Mercado</b><p>Organize builds e consulte preços do Albion diretamente pelo Discord.</p></article>
+        <article class="feature-card"><b>📦 Regear Premium</b><p>Solicitação com evento recente, upload do print da morte, análise administrativa, aprovação, entrega e histórico.</p></article>
+        <article class="feature-card"><b>⚙️ Administração</b><p>Permissões, cargos, economia, presença e atualização dos painéis.</p></article>
+        <article class="feature-card"><b>🎭 Emojis Albion</b><p>Transforme itens do Albion em emojis personalizados para seu servidor.</p></article>
+        <article class="feature-card"><b>🔊 Salas temporárias</b><p>Crie salas de voz temporárias vinculadas aos eventos da guilda.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="demonstracao" class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">DEMONSTRAÇÃO REAL</div>
+        <h2>Veja o Taverna do Loot funcionando</h2>
+        <p>As imagens abaixo mostram as principais áreas e recursos do bot no Discord.</p>
+      </div>
+
+      <div class="showcase">
+        <div class="shot"><img src="01-eventos-publicados.png" alt="Evento publicado no Taverna do Loot"></div>
+        <div class="shot"><img src="02-templates.png" alt="Templates de eventos do Taverna do Loot"></div>
+        <div class="shot"><img src="03-loot-split.png" alt="Divisão automática de loot"></div>
+        <div class="shot"><img src="04-perfil.png" alt="Perfil e progressão do aventureiro"></div>
+        <div class="shot"><img src="05-ranking.png" alt="Ranking de prata"></div>
+        <div class="shot"><img src="06-tesouraria.png" alt="Tesouraria da guilda"></div>
+        <div class="shot"><img src="07-builds.png" alt="Sistema de builds"></div>
+        <div class="shot"><img src="08-mercado.png" alt="Mercado de Albion"></div>
+        <div class="shot"><img src="09-administracao.png" alt="Administração e permissões"></div>
+        <div class="shot"><img src="10-emojis.png" alt="Gerador de emojis do Albion"></div>
+        <div class="shot"><img src="12-regear-premium.png" alt="12. Regear Premium - sistema de análise e gerenciamento de Regear"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="premium" class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">PLANO PREMIUM</div>
+        <h2>Libere todos os recursos da Taverna</h2>
+        <p>Plano completo para guildas que querem automatizar a organização e a economia do servidor.</p>
+      </div>
+
+      <div class="premium-box">
+        <div>
+          <h3 style="font-size:1.7rem;margin-top:0">👑 Taverna do Loot Premium</h3>
+          <ul>
+            <li>✓ Eventos ilimitados</li>
+            <li>✓ Templates ilimitados</li>
+            <li>✓ Loot Split completo</li>
+            <li>✓ Crédito automático no saldo</li>
+            <li>✓ Taxa automática da guilda</li>
+            <li>✓ Taxa automática do caller</li>
+            <li>✓ Tesouraria completa</li>
+            <li>✓ Histórico financeiro</li>
+            <li>✓ Salas de voz temporárias</li>
+            <li>✓ Permissões administrativas avançadas</li>
+            <li>✓ Sistema completo de Builds</li>
+            <li>✓ Recursos avançados do Mercado Albion</li>
+            <li>✓ Regear com aprovação administrativa</li>
+            <li>✓ Pagamento de Regear em Prata ou Build</li>
+            <li>✓ Fila de entregas e histórico de Regear</li>
+          </ul>
+        </div>
+        <div class="price">
+          <small>Plano Premium</small>
+          <strong>R$ 15,00</strong>
+          <p>por mês</p>
+          <span style="color:var(--muted)">Pagamento via Pix pelo Mercado Pago.</span>
+        </div>
+      </div>
+
+      <div class="shot" style="margin-top:28px">
+        <img src="11-premium.png" alt="Plano Premium Taverna do Loot">
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <div class="eyebrow">COMECE AGORA</div>
+      <h2>Leve a Taverna para sua guilda</h2>
+      <p style="color:var(--muted);max-width:700px;margin:0 auto 24px">
+        Adicione o bot ao seu servidor e centralize eventos, progressão, loot, economia, Regear e recursos do Albion.
+      </p>
+      <a class="btn discord" href="https://discord.com/oauth2/authorize?client_id=1537604539983732766" target="_blank" rel="noopener noreferrer">🤖 Adicionar Taverna do Loot ao servidor</a>
+    </div>
+  </section>
+
+  <section id="suporte" class="section">
+    <div class="container support">
+      <div class="support-card">
+        <div class="eyebrow">SUPORTE</div>
+        <h2 style="font-size:2rem">Atendimento direto</h2>
+        <p>Precisa de ajuda com instalação, configuração, Premium ou pagamento? Entre em contato pelo Discord.</p>
+        <strong>Discord: NTNcrazy</strong>
+      </div>
+      <div class="support-card">
+        <div class="eyebrow">INFORMAÇÕES</div>
+        <h2 style="font-size:2rem">Serviço independente</h2>
+        <p>O Taverna do Loot é um serviço independente de automação e organização para comunidades no Discord. Albion Online é propriedade de seus respectivos titulares.</p>
+        <p>O Taverna do Loot não é afiliado, patrocinado ou endossado pela Sandbox Interactive.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <strong style="color:#fff">Taverna do Loot</strong><br>
+    © 2026 • Todos os direitos reservados.
+  </div>
+</footer>
+
+</body>
+</html>
